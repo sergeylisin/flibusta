@@ -1,6 +1,7 @@
 import settings
 import zip_file
 from glob import glob
+from itertools import islice
 import os
 import logging
 

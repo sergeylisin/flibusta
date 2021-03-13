@@ -2,7 +2,7 @@ from typing import Set
 import xmltodict
 import logging
 from typing import Set
-
+import tokenizer
 
 NAMESPACES = {'fb2': 'http://www.gribuser.ru/xml/fictionbook/2.0'}
 
@@ -19,6 +19,16 @@ def dict_to_str(v, exclude: Set = set([])):
                                lambda y: y[0] not in exclude, v.items()))
                            ))
     return ret
+
+def guess_book_language(book):
+    ret_lang = tokenizer.lang_map.get(book.lang)
+    if tokenizer.lang_map.get(book.lang) == None:
+        if book.annotation != " ":
+            ret_lang = tokenizer.guess_language(book.title + " " + book.authors + " " + book.annotation)
+        else:
+            ret_lang = tokenizer.guess_language(book.title + " " + book.authors)
+    return ret_lang
+
 
 class Book:
     def __init__(self, zip_file, book_name):
@@ -47,7 +57,8 @@ class Book:
                     book_description.get("author"),set(["id"])) or " ")
                 self.authors = self.authors.replace("\n","").replace("\r","")
                 self.lang = book_description.get("lang")
-                
+                self.lang = guess_book_language(self)
+                self.__get_words()
 
             except Exception as e:
                 logging.error(
@@ -56,3 +67,7 @@ class Book:
     def __repr__(self):
         return f"zip: {self.__zip_file.__str__()} book:{self.__book_name} language:{self.lang} authors:{self.authors} title:{self.title} annotation:{self.annotation}"
 
+    def __get_words(self):
+        if self.words == None:
+            text = self.authors + " " + self.title + " " + self.annotation
+            self.words = tokenizer.word_tokenize(text,self.lang)
