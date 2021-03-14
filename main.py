@@ -1,10 +1,10 @@
 import settings
 import zip_file
 from glob import glob
-from itertools import islice
 import os
 import logging
 from db import Base, db_session, engine
+import model
 
 logging.basicConfig(filename="flibusta.log")
 
@@ -21,13 +21,15 @@ def main():
     with open("outfile.txt","w") as f:
         for i in glob('*.zip'):
             z = zip_file.ZipFile(i)
-            db_session.merge(z)
+            z_m = model.ZipFile(z)
+            db_session.merge(z_m)
             db_session.commit()
             for b in z.get_book_list():
                 b.read_headers()
-                db_session.merge(b)
+                b_m = model.Book(b)
+                db_session.merge(b_m)
                 db_session.commit()
-#                print(b,file=f)
+                print(b,file=f)
 
 
 if __name__ == '__main__':

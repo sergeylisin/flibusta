@@ -4,6 +4,7 @@ import logging
 from typing import Set
 import tokenizer
 
+
 NAMESPACES = {'fb2': 'http://www.gribuser.ru/xml/fictionbook/2.0'}
 
 
@@ -32,8 +33,8 @@ def guess_book_language(book):
 
 class Book:
     def __init__(self, zip_file, book_name):
-        self.__book_name = book_name
-        self.__zip_file = zip_file
+        self.book_name = book_name
+        self.zip_file = zip_file
         self.authors = None
         self.title = None
         self.annotation = None
@@ -42,7 +43,7 @@ class Book:
         self.words = None
 
     def open(self):
-        return self.__zip_file.open(self.__book_name)
+        return self.zip_file.open(self.book_name)
 
     def read_headers(self):
         with self.open() as b:
@@ -62,10 +63,10 @@ class Book:
 
             except Exception as e:
                 logging.error(
-                    f"Zip: {self.__zip_file.get_name()} Book: {self.__book_name}", exc_info=e)
+                    f"Zip: {self.zip_file.get_name()} Book: {self.book_name}", exc_info=e)
 
     def __repr__(self):
-        return f"zip: {self.__zip_file.__str__()} book:{self.__book_name} language:{self.lang} authors:{self.authors} title:{self.title} annotation:{self.annotation}"
+        return f"zip: {self.zip_file.__repr__()} book:{self.book_name} language:{self.lang} authors:{self.authors} title:{self.title} annotation:{self.annotation}"
 
     def __get_words(self):
         if self.words == None:
