@@ -1,6 +1,6 @@
 drop table book_words;
 drop table words;
-drop table book;
+drop table books;
 drop table zipfile;
 
 CREATE TABLE zipfile (
@@ -14,7 +14,7 @@ CREATE TABLE words (
   cnt integer DEFAULT NULL,
   PRIMARY KEY (id)
 );
-CREATE INDEX word_i1 ON words (word);
+CREATE unique INDEX word_i1 ON words (word);
 
 CREATE TABLE books (
   id serial,
@@ -32,8 +32,9 @@ CREATE TABLE books (
 CREATE TABLE book_words (
   book_id integer NOT NULL,
   word_id integer NOT NULL,
-  CONSTRAINT book_words_book_id_book_id_foreign FOREIGN KEY (book_id) REFERENCES book (id),
-  CONSTRAINT book_words_word_id_words_id_foreign FOREIGN KEY (word_id) REFERENCES words (id)
+  CONSTRAINT book_words_book_id_book_id_foreign FOREIGN KEY (book_id) REFERENCES books (id),
+  CONSTRAINT book_words_word_id_words_id_foreign FOREIGN KEY (word_id) REFERENCES words (id),
+  primary key(book_id,word_id)
 );
 
 create index book_words_word_id on book_words(word_id);

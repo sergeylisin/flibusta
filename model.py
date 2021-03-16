@@ -2,7 +2,7 @@ import book
 import zip_file
 
 from sqlalchemy import Column, Integer, String, Text
-from sqlalchemy.sql.schema import FetchedValue, Index, PrimaryKeyConstraint
+from sqlalchemy.sql.schema import FetchedValue, ForeignKeyConstraint, Index, PrimaryKeyConstraint
 from db import Base, engine
 
 class ZipFile(Base):
@@ -24,9 +24,18 @@ class Book(Base):
 
 class Word(Base):
     __tablename__="words"
-    id = Column("id",primary_key=True, autoincrement=True, server_default=FetchedValue())
+    id = Column("id",type_=Integer,primary_key=True, autoincrement=True, server_default=FetchedValue())
     word = Column("word",type_=String(255))
-    cnt = Column("cnt", type_=Integer)
+    cnt = Column("cnt", type_=Integer, default=1)
     word_i1 = Index("word")
-    
 
+    def __repr__(self):
+        return f"Word: {self.word}"
+    
+class BookWord(Base):
+    __tablename__="book_words"
+    book_id = Column("book_id",Integer,primary_key=True)
+    word_id = Column("word_id",Integer, primary_key=True)
+
+    def __repr__(self):
+        return f"book_id={self.book_id} word_id={self.word_id}"
