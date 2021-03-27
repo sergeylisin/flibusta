@@ -15,16 +15,17 @@ def main():
     os.chdir(settings.LIBRARY_PATH)
 
     for i in glob('*.zip'):
-        try:
-            z = zip_file.ZipFile(i)
-            db_z = db_interface.save_zip_file(z)
-            db_interface.commit()
-            for b in z.get_book_list():
+        z = zip_file.ZipFile(i)
+        db_z = db_interface.save_zip_file(z)
+        db_interface.commit()
+        for b in z.get_book_list():
+            try:
                 b.read_headers()
                 b_m = db_interface.save_book(b)
                 db_interface.commit()
-        except Exception as e:
-            logging.error(f"Book: {b}", exc_info=e)
+            except Exception as e:
+                logging.error(f"Book: {b}", exc_info=e)
+                db_interface.rollback()
 
 
 

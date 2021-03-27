@@ -16,6 +16,8 @@ class NoSuchWord(Exception):
 def commit():
     db_session.commit()
 
+def rollback():
+    db_session.rollback()
 
 def save_zip_file(zipfile: zip_file.ZipFile) -> ZipFile:
     z = ZipFile(zip_name=zipfile.zip_name)

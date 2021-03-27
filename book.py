@@ -21,8 +21,8 @@ def dict_to_str(v, exclude: Set = set([])):
 
 
 def guess_book_language(book):
-    ret_lang = tokenizer.lang_map.get(book.lang)
-    if tokenizer.lang_map.get(book.lang) == None:
+    ret_lang = tokenizer.LANG_MAP.get(book.lang)
+    if tokenizer.LANG_MAP.get(book.lang) == None:
         if book.annotation != " ":
             ret_lang = tokenizer.guess_language(
                 book.title + " " + book.authors + " " + book.annotation)
