@@ -1,7 +1,5 @@
 from typing import Set
 import xmltodict
-import logging
-from typing import Set
 import tokenizer
 
 
