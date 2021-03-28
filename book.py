@@ -36,17 +36,6 @@ def guess_book_language(book):
 
 
 class Book:
-    def __init__(self, zip_file, book_name):
-        self.book_name = book_name
-        self.zip_file = zip_file
-        self.authors = None
-        self.title = None
-        self.annotation = None
-        self.genre = None
-        self.lang = None
-        self.words = None
-
-
     def __init__(self,**kwargs ):
         self.zip_file = zip_file.ZipFile(kwargs.get('zip_file'))
         self.book_name = zip_file.ZipFile(kwargs.get('book_name'))
