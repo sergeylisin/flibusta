@@ -1,6 +1,9 @@
+import zip_file
 from typing import Set
 import xmltodict
+from typing import Set
 import tokenizer
+
 
 
 NAMESPACES = {'fb2': 'http://www.gribuser.ru/xml/fictionbook/2.0'}
@@ -42,6 +45,17 @@ class Book:
         self.genre = None
         self.lang = None
         self.words = None
+
+
+    def __init__(self,**kwargs ):
+        self.zip_file = zip_file.ZipFile(kwargs.get('zip_file'))
+        self.book_name = zip_file.ZipFile(kwargs.get('book_name'))
+        self.annotation = zip_file.ZipFile(kwargs.get('annotation'))
+        self.title = zip_file.ZipFile(kwargs.get('title'))
+        self.genre = zip_file.ZipFile(kwargs.get('genre'))
+        self.lang = zip_file.ZipFile(kwargs.get('lang'))
+        self.lang = zip_file.ZipFile(kwargs.get('authors'))
+        self.__get_words()
 
     def open(self):
         return self.zip_file.open(self.book_name)
