@@ -1,6 +1,9 @@
+import zip_file
 from typing import Set
 import xmltodict
+from typing import Set
 import tokenizer
+
 
 
 NAMESPACES = {'fb2': 'http://www.gribuser.ru/xml/fictionbook/2.0'}
@@ -21,8 +24,8 @@ def dict_to_str(v, exclude: Set = set([])):
 
 
 def guess_book_language(book):
-    ret_lang = tokenizer.LANG_MAP.get(book.lang)
-    if tokenizer.LANG_MAP.get(book.lang) == None:
+    ret_lang = tokenizer.lang_map.get(book.lang)
+    if tokenizer.lang_map.get(book.lang) == None:
         if book.annotation != " ":
             ret_lang = tokenizer.guess_language(
                 book.title + " " + book.authors + " " + book.annotation)
@@ -42,6 +45,16 @@ class Book:
         self.genre = None
         self.lang = None
         self.words = None
+
+
+    def __init__(self,zip_file,**kwargs ):
+        self.zip_file = zip_file.ZipFile(kwargs['zip_file'])
+        self.book_name = zip_file.ZipFile(kwargs['book_name'])
+        self.annotation = zip_file.ZipFile(kwargs['annotation'])
+        self.title = zip_file.ZipFile(kwargs['title'])
+        self.genre = zip_file.ZipFile(kwargs['genre'])
+        self.lang = zip_file.ZipFile(kwargs['lang'])
+        self.__get_words()
 
     def open(self):
         return self.zip_file.open(self.book_name)
