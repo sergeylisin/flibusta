@@ -16,8 +16,8 @@ def main():
 
     for i in glob('*.zip'):
         z = zip_file.ZipFile(i)
-        db_z = db_interface.save_zip_file(z)
-        db_interface.commit()
+        # db_z = db_interface.save_zip_file(z)
+        # db_interface.commit()
         for b in z.get_book_list():
             try:
                 b.read_headers()

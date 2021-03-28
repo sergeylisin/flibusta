@@ -1,7 +1,10 @@
 drop table book_words;
+drop table word_temp;
 drop table words;
 drop table books;
 drop table zipfile;
+drop table session;
+
 
 CREATE TABLE zipfile (
   zip_name varchar(255) NOT NULL,
@@ -14,6 +17,7 @@ CREATE TABLE words (
   cnt integer DEFAULT NULL,
   PRIMARY KEY (id)
 );
+
 CREATE unique INDEX word_i1 ON words (word);
 
 CREATE TABLE books (
@@ -42,3 +46,14 @@ create index book_words_word_id on book_words(word_id);
 create index book_words_book_id on book_words(book_id);
 
 
+create table session (
+  id serial primary key,
+  start_date date
+);
+
+create table word_temp (
+  session_id integer,
+  word_id integer,
+  CONSTRAINT word_srch_word_id_words_id_foreign FOREIGN KEY (word_id) REFERENCES words (id),
+  CONSTRAINT word_srch_session_id_fk FOREIGN KEY (session_id) REFERENCES session (id)
+);

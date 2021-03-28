@@ -1,7 +1,7 @@
 import logging
 from pycountry import db
 from db import db_session
-from model import ZipFile, Book, Word, BookWord, WordTemp
+from model import ZipFile, Book, Word, BookWord
 import zip_file
 import book
 from typing import List, Set, Iterable
@@ -31,8 +31,18 @@ def save_zip_file(zipfile: zip_file.ZipFile) -> ZipFile:
 
 
 def save_book(book: book.Book) -> Book:
+    try:
+        db_zipfile = ZipFile(zip_name = book.zip_file.zip_name)
+        db_session.merge(db_zipfile)
+        db_session.commit()
+    except IntegrityError as e:
+        db_session.rollback()
+        db_zipfile = db_session.query(ZipFile).filter(
+            ZipFile.zip_name == book.zip_file.zip_name).first()
+        logging.error(e)
     db_book = Book(zip_name=book.zip_file.zip_name, book_name=book.book_name, title=book.title,
                    annotation=book.annotation, authors=book.authors, language=book.lang)
+   
     try:
         db_session.add(db_book)
         db_session.commit()

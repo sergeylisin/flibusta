@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, VARCHAR
 from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.schema import FetchedValue, ForeignKeyConstraint, Index, PrimaryKeyConstraint
 from db import Base, engine
@@ -6,7 +6,7 @@ from db import Base, engine
 
 class ZipFile(Base):
     __tablename__="zipfile"
-    zip_name = Column(name="zip_name",primary_key=True,type_=String)
+    zip_name = Column("zip_name",String,primary_key=True)
 
     def __repr__(self):
         return f"ZipFile: {self.zip_name}"
