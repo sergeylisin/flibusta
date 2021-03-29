@@ -1,3 +1,4 @@
+import book as b
 from model import WordTemp, Session, BookWord, Book
 import tokenizer
 import db_interface
@@ -31,10 +32,12 @@ class SearchSession:
             )
         for i in q.all():
             book = db_session.query(Book).filter(Book.id == i[0]).first()
-            ret_books.append(book)
+            ret_books.append(\
+                b.Book(zip_file = book.zip_name,book_name = book.book_name,\
+                    annotation = book.annotation, authors = book.authors, \
+                    title = book.title, genre = book.genre)
+            )
         return ret_books
-    #     .as_scalar() 
-    # return q
     
         
             
