@@ -20,6 +20,7 @@ class Book(Base):
     authors = Column("authors",type_=Text)
     language = Column("language",type_=String)
     title = Column("title",type_=Text)
+    genre = Column("genre",String)
 
     def __repr__(self):
         return f"Book: zip_name={self.zip_name} book_name={self.book_name}"
@@ -45,7 +46,7 @@ class BookWord(Base):
 class Session(Base):
     __tablename__="session"
     id = Column("id",Integer, primary_key=True, autoincrement=True,server_default=FetchedValue())
-    start_date = Column("start_date",DateTime,primary_key=True,server_default=FetchedValue())
+    start_date = Column("start_date",DateTime,server_default=FetchedValue())
 
 class WordTemp(Base):
     __tablename__="word_temp"

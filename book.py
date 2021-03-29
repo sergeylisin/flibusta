@@ -66,6 +66,7 @@ class Book:
             self.authors = self.authors.replace("\n", "").replace("\r", "")
             self.lang = book_description.get("lang")
             self.lang = guess_book_language(self)
+            self.genre = book_description.get("genre")
             self.__get_words()
 
     def __repr__(self):

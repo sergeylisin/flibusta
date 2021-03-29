@@ -41,7 +41,7 @@ def save_book(book: book.Book) -> Book:
             ZipFile.zip_name == book.zip_file.zip_name).first()
         logging.error(e)
     db_book = Book(zip_name=book.zip_file.zip_name, book_name=book.book_name, title=book.title,
-                   annotation=book.annotation, authors=book.authors, language=book.lang)
+                   annotation=book.annotation, authors=book.authors, language=book.lang, genre = book.genre)
    
     try:
         db_session.add(db_book)
