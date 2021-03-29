@@ -24,8 +24,8 @@ def dict_to_str(v, exclude: Set = set([])):
 
 
 def guess_book_language(book):
-    ret_lang = tokenizer.lang_map.get(book.lang)
-    if tokenizer.lang_map.get(book.lang) == None:
+    ret_lang = tokenizer.LANG_MAP.get(book.lang)
+    if tokenizer.LANG_MAP.get(book.lang) == None:
         if book.annotation != " ":
             ret_lang = tokenizer.guess_language(
                 book.title + " " + book.authors + " " + book.annotation)
@@ -36,24 +36,15 @@ def guess_book_language(book):
 
 
 class Book:
-    def __init__(self, zip_file, book_name):
-        self.book_name = book_name
-        self.zip_file = zip_file
-        self.authors = None
-        self.title = None
-        self.annotation = None
-        self.genre = None
-        self.lang = None
+    def __init__(self,**kwargs ):
         self.words = None
-
-
-    def __init__(self,zip_file,**kwargs ):
-        self.zip_file = zip_file.ZipFile(kwargs['zip_file'])
-        self.book_name = zip_file.ZipFile(kwargs['book_name'])
-        self.annotation = zip_file.ZipFile(kwargs['annotation'])
-        self.title = zip_file.ZipFile(kwargs['title'])
-        self.genre = zip_file.ZipFile(kwargs['genre'])
-        self.lang = zip_file.ZipFile(kwargs['lang'])
+        self.zip_file = zip_file.ZipFile(kwargs.get('zip_file'))
+        self.book_name = kwargs.get('book_name') or ""
+        self.annotation = kwargs.get('annotation') or ""
+        self.title = kwargs.get('title') or ""
+        self.genre = kwargs.get('genre') or ""
+        self.lang = kwargs.get('lang') or ""
+        self.authors = kwargs.get('authors') or ""
         self.__get_words()
 
     def open(self):
@@ -80,8 +71,7 @@ class Book:
         return f"zip: {self.zip_file.__repr__()} book:{self.book_name} language:{self.lang} authors:{self.authors} title:{self.title} annotation:{self.annotation}"
 
     def __get_words(self):
+        text = self.authors + " " + self.title + " " + self.annotation
+        self.words = tokenizer.word_tokenize(text, self.lang)
         if self.words == None:
-            text = self.authors + " " + self.title + " " + self.annotation
-            self.words = tokenizer.word_tokenize(text, self.lang)
-            if self.words == None:
-                self.words = set()
+            self.words = set()
