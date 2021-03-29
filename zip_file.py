@@ -9,7 +9,7 @@ class ZipFile:
     def get_book_list(self):
         with zipfile.ZipFile(settings.LIBRARY_PATH + '/' + self.zip_name) as z:
             for b in z.namelist():
-                yield book.Book(self, b)
+                yield book.Book(zip_file = self.zip_name, book_name = b)
 
     def get_book(self,book_name):
         self.__zip_file = zipfile.ZipFile(settings.LIBRARY_PATH + '/' + self.zip_name)
@@ -33,6 +33,6 @@ class ZipFile:
     def get_name(self):
         return self.zip_name
  
-    def __str__(self):
+    def __repr__(self):
         return str(self.zip_name)
 
