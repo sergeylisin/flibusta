@@ -45,15 +45,14 @@ create index book_words_word_id on book_words(word_id);
 
 create index book_words_book_id on book_words(book_id);
 
-
 create table session (
-  id serial primary key,
-  start_date date
+  id bigserial primary key,
+  start_date timestamp
 );
 
 create table word_temp (
-  session_id integer,
-  word_id integer,
-  CONSTRAINT word_srch_word_id_words_id_foreign FOREIGN KEY (word_id) REFERENCES words (id),
-  CONSTRAINT word_srch_session_id_fk FOREIGN KEY (session_id) REFERENCES session (id)
+  session_id integer references session(id),
+  word_id integer references words(id)
 );
+
+create index word_temp_sess_id on word_temp(session_id);
