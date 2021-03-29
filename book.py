@@ -48,15 +48,6 @@ class Book:
         self.__get_words()
 
 
-    def __init__(self,zip_file,**kwargs ):
-        self.zip_file = zip_file.ZipFile(kwargs['zip_file'])
-        self.book_name = zip_file.ZipFile(kwargs['book_name'])
-        self.annotation = zip_file.ZipFile(kwargs['annotation'])
-        self.title = zip_file.ZipFile(kwargs['title'])
-        self.genre = zip_file.ZipFile(kwargs['genre'])
-        self.lang = zip_file.ZipFile(kwargs['lang'])
-        self.__get_words()
-
     def open(self):
         return self.zip_file.open(self.book_name)
 
