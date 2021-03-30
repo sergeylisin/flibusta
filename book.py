@@ -70,7 +70,7 @@ class Book:
             self.__get_words()
 
     def __repr__(self):
-        return f"zip: {self.zip_file.__repr__()} book:{self.book_name} language:{self.lang} authors:{self.authors} title:{self.title} annotation:{self.annotation}"
+        return f"zip: {self.zip_file.__repr__()} book:{self.book_name} language:{self.lang} authors:{self.authors} title:{self.title} "
 
     def __get_words(self):
         text = self.authors + " " + self.title + " " + self.annotation

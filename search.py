@@ -14,6 +14,7 @@ class SearchSession:
 #        db_session.query(Session).filter(Session.start_date < func.now()).delete()
         db_session.commit()
         self.session_id = sess.id
+        self.search_result = []
 
     def search(self,text:str) :
         language = tokenizer.guess_language(text)
@@ -30,14 +31,15 @@ class SearchSession:
             having(func.count(BookWord.word_id) == db_session.query(func.count(WordTemp.word_id.distinct())).\
                 filter(WordTemp.session_id == self.session_id)\
             )
+        self.search_result.clear()
         for i in q.all():
             book = db_session.query(Book).filter(Book.id == i[0]).first()
-            ret_books.append(\
+            self.search_result.append(\
                 b.Book(zip_file = book.zip_name,book_name = book.book_name,\
                     annotation = book.annotation, authors = book.authors, \
                     title = book.title, genre = book.genre)
             )
-        return ret_books
+        
     
         
             

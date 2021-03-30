@@ -16,9 +16,11 @@ logging.basicConfig(filename="flibusta.log")
 
 
 def main():
-    text = "александр казанцев"
+    text = "пылающий остров"
     s = SearchSession()
-    books = s.search(text)
+    s.search(text)
+    print(s.search_result)
+    
 
 
 
