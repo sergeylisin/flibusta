@@ -59,3 +59,5 @@ create table word_temp (
 );
 
 create index word_temp_sess_id on word_temp(session_id);
+
+
