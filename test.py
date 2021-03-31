@@ -6,6 +6,7 @@ import logging
 from model import ZipFile, Book, Session
 import db_interface
 import zip_file
+from pprint import pprint
 
 
 
@@ -17,9 +18,9 @@ logging.basicConfig(filename="flibusta.log")
 
 def main():
     text = "пылающий остров"
-    s = SearchSession()
+    s = SearchSession(p_user_id=1)
     s.search(text)
-    print(s.search_result)
+    pprint(s.search_result)
     
 
 

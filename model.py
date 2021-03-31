@@ -47,10 +47,17 @@ class Session(Base):
     __tablename__="session"
     id = Column("id",Integer, primary_key=True, autoincrement=True,server_default=FetchedValue())
     start_date = Column("start_date",DateTime,server_default=FetchedValue())
+    user_id = Column("user_id",Integer)
+    
 
-class WordTemp(Base):
-    __tablename__="word_temp"
+class SearchWords(Base):
+    __tablename__="session_search_words"
     session_id = Column("session_id",Integer)
     word_id = Column("word_id",Integer)
     word_temp_pk = PrimaryKeyConstraint(session_id,word_id)
 
+class SearchResult(Base):
+    __tablename__="search_result"
+    session_id = Column("session_id", Integer)
+    book_id = Column("book_id",Integer)
+    search_result_pk = PrimaryKeyConstraint(session_id,book_id)
