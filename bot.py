@@ -3,39 +3,39 @@ import search
 from book import Book
 
 import telegram.ext
-from telegram import ReplyKeyboardMarkup
 from telegram.update import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext.callbackcontext import CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, RegexHandler, Filters
 from typing import List, Iterable
+from pprint import pprint
 
 
 session = None
 
 
-def get_keyboard(books: Iterable[Book]) -> ReplyKeyboardMarkup:
-    menu = []
-    for i in books:
-        menu.append([f"/get {i.book_name}"])
-    return ReplyKeyboardMarkup(menu)
+def greet_user(update: Update, context: CallbackContext):
+    global session
+#    pprint(update.message.from_user.id)
+    session = search.SearchSession(p_user_id=update.message.from_user.id)
 
 
-def greet_user(update: telegram.update.Update, context: telegram.ext.callbackcontext.CallbackContext):
-    session = search.SearchSession()
-
-
-def search_book(update: Update, context: telegram.ext.callbackcontext.CallbackContext):
+def search_book(update: Update, context: CallbackContext):
     global session
     if session == None:
-        session = search.SearchSession()
+        session = search.SearchSession(update.message.from_user.id)
     search_text = update.message.text[update.message.text.find(' ')+1:]
     session.search(search_text)
-    text = "\n".join(map(lambda x:f"{x.book_name} {x.title}",session.search_result))
-    update.message.reply_text(text, reply_markup=get_keyboard(session.search_result))
-    
+    text = "\n".join(map(lambda x : f"{x.authors} - {x.title} /info{x.book_name}",session.search_result))
+    update.message.reply_text(text)
 
 
-def get_book(update: Update, context: telegram.ext.callbackcontext.CallbackContext):
+def book_info(update: Update, context: CallbackContext):
+    update.message.reply_text(update.message.text)
+
+
+def get_book(update: Update, context: CallbackContext):
     print(update.message.text[update.message.text.find(' ')+1:])
+    update.message.reply_text(update.message.text)
 
 
 def main():
@@ -43,8 +43,10 @@ def main():
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(CommandHandler("search", search_book))
-    dp.add_handler(CommandHandler("get", get_book))
+    dp.add_handler(RegexHandler('^/info\d+', book_info))
+    dp.add_handler(RegexHandler('^/get\d+', get_book))
+    dp.add_handler(MessageHandler(Filters.text,search_book))
+
 
     mybot.start_polling()
     mybot.idle()
