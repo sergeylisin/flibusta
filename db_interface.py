@@ -85,4 +85,7 @@ def get_word_id(word: str) -> int:
 def get_words_id(words: Iterable[str]) -> Iterable[str]:
     return filter(lambda x: x != None, map(lambda w: get_word_id(w), words))
 
-    
+
+def get_book(book_name:str) -> Book:
+    book = db_session.query(Book).filter(Book.book_name == book_name).first()
+    return book
