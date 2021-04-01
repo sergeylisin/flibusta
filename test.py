@@ -20,7 +20,7 @@ def main():
     text = "пылающий остров"
     s = SearchSession(p_user_id=1)
     s.search(text)
-    pprint(s.sess.search_words)
+    pprint(s.search_result)
     
 
 
