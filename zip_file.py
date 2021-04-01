@@ -9,7 +9,7 @@ class ZipFile:
     def get_book_list(self):
         with zipfile.ZipFile(settings.LIBRARY_PATH + '/' + self.zip_name) as z:
             for b in z.namelist():
-                yield book.Book(zip_file = self.zip_name, book_name = b)
+                yield book.Book(zip_file = self.zip_name, book_name = b[0:b.find('.')])
 
     def get_book(self,book_name):
         self.__zip_file = zipfile.ZipFile(settings.LIBRARY_PATH + '/' + self.zip_name)
@@ -25,7 +25,7 @@ class ZipFile:
 
     def open(self,book_name):
         self.__zip_file = zipfile.ZipFile(settings.LIBRARY_PATH + '/' + self.zip_name)
-        return self.__zip_file.open(book_name,'r')
+        return self.__zip_file.open(book_name + '.fb2','r')
 
     def close(self):
         self.__zip_file.close()
