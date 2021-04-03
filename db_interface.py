@@ -92,6 +92,6 @@ def get_book(book_name:str) -> Book:
 
 def get_search_words(p_session_id: int) -> Iterable[int]:
     ret = []
-    for i in db_session.query(SearchWords.word_id).filter(SearchWords.session_id == p_session_id).all():
+    for i in db_session.query(Word.word).join(SearchWords, Word.id == SearchWords.word_id).filter(SearchWords.session_id == p_session_id).all():
         ret.append(i[0])
     return ret

@@ -19,11 +19,12 @@ class SearchSession:
             db_session.add(self.sess)
             db_session.commit()
         self.session_id = self.sess.id
+        self.user_id = p_user_id
         self.search_result = []
 
-    def search(self, text: str):
-        language = tokenizer.guess_language(text)
-        words = tokenizer.word_tokenize(text, language)
+    def search(self, words:List[str]):
+#        language = tokenizer.guess_language(text)
+#        words = tokenizer.word_tokenize(text, language)
         words_id = db_interface.get_words_id(words)
 
         # очищаем список слов, использованный при предыдущем поиске
