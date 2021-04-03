@@ -6,6 +6,7 @@ from typing import List
 from db import db_session
 from sqlalchemy import func, and_
 
+sessions = {}
 
 class SearchSession:
     def __init__(self, p_user_id: int):
@@ -54,3 +55,9 @@ class SearchSession:
             )
             db_session.add(SearchResult(session_id = self.sess.id,book_id = book.id))
         db_session.commit()
+
+def get_session(user_id:int) -> SearchSession:
+    if user_id not in sessions:
+# сессии в кеше нет - создаем
+        sessions[user_id] = SearchSession(user_id)
+    return sessions[user_id]

@@ -12,25 +12,21 @@ from pprint import pprint
 import re
 
 
-session = None
-
 BOOK_INFO_REGEXP = '^/info(\d+)'
 BOOK_GET_REGEXP = '^/get(\d+)'
 
 
 def greet_user(update: Update, context: CallbackContext):
-    global session
 #    pprint(update.message.from_user.id)
-    session = search.SearchSession(p_user_id=update.message.from_user.id)
+#    session = search.SearchSession(p_user_id=update.message.from_user.id)
+    pass
 
 
 def search_book(update: Update, context: CallbackContext):
-    global session
-    if session == None:
-        session = search.SearchSession(update.message.from_user.id)
-    session.search(update.message.text)
+    sess = search.get_session(update.message.from_user.id)
+    sess.search(update.message.text)
     text = "\n".join(map(
-        lambda x: f"{x.authors} - {x.title} /info{x.book_name}", session.search_result))
+        lambda x: f"{x.authors} - {x.title} /info{x.book_name}", sess.search_result))
     update.message.reply_text(text)
 
 

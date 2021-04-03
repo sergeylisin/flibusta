@@ -1,4 +1,4 @@
-from search import SearchSession
+from search import SearchSession, get_session
 import settings
 from glob import glob
 import os
@@ -18,7 +18,7 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
 def main():
     text = "пылающий остров"
-    s = SearchSession(p_user_id=1)
+    s = get_session(1)
     s.search(text)
     pprint(s.search_result)
     
