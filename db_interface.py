@@ -1,7 +1,7 @@
 import logging
 from pycountry import db
 from db import db_session
-from model import ZipFile, Book, Word, BookWord
+from model import ZipFile, Book, Word, BookWord, SearchResult, SearchWords
 import zip_file
 import book
 from typing import List, Set, Iterable
@@ -85,4 +85,13 @@ def get_word_id(word: str) -> int:
 def get_words_id(words: Iterable[str]) -> Iterable[str]:
     return filter(lambda x: x != None, map(lambda w: get_word_id(w), words))
 
-    
+
+def get_book(book_name:str) -> Book:
+    book = db_session.query(Book).filter(Book.book_name == book_name).first()
+    return book
+
+def get_search_words(p_session_id: int) -> Iterable[int]:
+    ret = []
+    for i in db_session.query(Word.word).join(SearchWords, Word.id == SearchWords.word_id).filter(SearchWords.session_id == p_session_id).all():
+        ret.append(i[0])
+    return ret

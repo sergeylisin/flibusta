@@ -6,6 +6,7 @@ from typing import List
 from db import db_session
 from sqlalchemy import func, and_
 
+sessions = {}
 
 class SearchSession:
     def __init__(self, p_user_id: int):
@@ -18,11 +19,12 @@ class SearchSession:
             db_session.add(self.sess)
             db_session.commit()
         self.session_id = self.sess.id
+        self.user_id = p_user_id
         self.search_result = []
 
-    def search(self, text: str):
-        language = tokenizer.guess_language(text)
-        words = tokenizer.word_tokenize(text, language)
+    def search(self, words:List[str]):
+#        language = tokenizer.guess_language(text)
+#        words = tokenizer.word_tokenize(text, language)
         words_id = db_interface.get_words_id(words)
 
         # очищаем список слов, использованный при предыдущем поиске
@@ -54,3 +56,9 @@ class SearchSession:
             )
             db_session.add(SearchResult(session_id = self.sess.id,book_id = book.id))
         db_session.commit()
+
+def get_session(user_id:int) -> SearchSession:
+    if user_id not in sessions:
+# сессии в кеше нет - создаем
+        sessions[user_id] = SearchSession(user_id)
+    return sessions[user_id]
