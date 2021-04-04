@@ -35,6 +35,7 @@ def search_book(update: Update, context: CallbackContext):
 
 def book_info(update: Update, context: CallbackContext):
     r = re.findall(BOOK_INFO_REGEXP, update.message.text)
+    book = b.Book()
     if len(r) > 0:
         book = db_interface.get_book(book_name=r[0])
         reply_text = book.annotation + "\n" + f"/get{book.book_name}"
@@ -45,9 +46,12 @@ def book_info(update: Update, context: CallbackContext):
 
 def get_book(update: Update, context: CallbackContext):
     r = re.findall(BOOK_GET_REGEXP, update.message.text)
+    
     if len(r) > 0:
-        book = db_interface.get_book(book_name=r[0])
-        update.message.reply_text(book.annotation)
+        db_book = db_interface.get_book(r[0])
+        book = b.Book(zip_file = db_book.zip_name,book_name = db_book.book_name)    
+        with book.open() as f:
+            update.message.reply_document(document=f,filename=book.book_name + ".fb2")
     else:
         update.message.reply_text("unknown book")
 

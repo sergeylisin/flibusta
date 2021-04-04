@@ -1,12 +1,11 @@
 import logging
-from pycountry import db
 from db import db_session
-from model import ZipFile, Book, Word, BookWord, SearchResult, SearchWords
+from model import Session, ZipFile, Book, Word, BookWord, SearchResult, SearchWords, Session
 import zip_file
 import book
 from typing import List, Set, Iterable
 from sqlalchemy.exc import IntegrityError
-import tokenizer
+
 
 
 class NoSuchWord(Exception):
@@ -95,3 +94,23 @@ def get_search_words(p_session_id: int) -> Iterable[int]:
     for i in db_session.query(Word.word).join(SearchWords, Word.id == SearchWords.word_id).filter(SearchWords.session_id == p_session_id).all():
         ret.append(i[0])
     return ret
+
+def get_or_create_user_session(user_id:int) -> Session:
+    sess = db_session.query(Session).filter(Session.user_id == user_id).first()
+    if sess == None:
+    # не нашли сессию для этого пользователя
+        sess = Session(user_id=user_id)
+        db_session.add(sess)
+        db_session.commit()
+    return sess
+
+def save_search_words(session_id:int, words:Iterable[int]) -> None:
+    words_id = get_words_id(words)
+
+    db_session.query(SearchWords).filter(SearchWords.session_id == session_id).delete()
+    db_session.commit()
+
+    # найти id всех книг, которые содержат все найденные слова
+    for i in words_id:
+        db_session.add(SearchWords(session_id=session_id, word_id=i))
+    db_session.commit()
